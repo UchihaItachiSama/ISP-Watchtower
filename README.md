@@ -31,7 +31,7 @@ This project sets up a simple monitoring solution for home network's Internet Se
 - Grafana is then used to visualize the data collected by Telegraf and stored in InfluxDB, providing real-time monitoring of ping response times, internet speed, and DNS queries.
 - Dashboards can be created in Grafana to display the data in a graphical format, for example sample dashboard included in this repo.
 
- <img src="media/isp-speed.png" height="200">  <img src="media/isp-dns.png" height="200"> 
+ <img src="media/isp-speed.png" height="150">  <img src="media/isp-dns.png" height="150"> 
 
 NOTE:
 > The entire stack can be deployed using docker or podman.
