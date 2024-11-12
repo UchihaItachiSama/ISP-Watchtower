@@ -57,6 +57,4 @@ networks:
 
 volumes:
   influxdb-data:
-    external: true
   grafana-data:
-    external: true

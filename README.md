@@ -61,12 +61,15 @@ git clone https://github.com/UchihaItachiSama/ISP-Watchtower.git
 - Have the required packages installed for example if using docker based installation have docker, docker-compose installed, similarly for podman have required setup completed before proceeding.
 - Following are the files in the repository
   - `ISP-Watchtower/monitoring/telegraf/telegraf.conf` contains the telegraf configuration for input and output plugins.
-  - `ISP-Watchtower/monitoring/grafana/provisioning/datasources/` folder contains the InfluxDB datasource YAML file
-  - `ISP-Watchtower/monitoring/grafana/provisioning/dashboards/` contains the dashboard YAML and JSON file
-  - `ISP-Watchtower/monitoring/podman/` contains the Kubernetes YAML definition files for deploying the volumes & pods using podman
+  - `ISP-Watchtower/monitoring/grafana/provisioning/datasources/` folder contains the InfluxDB datasource YAML file.
+  - `ISP-Watchtower/monitoring/grafana/provisioning/dashboards/` contains the dashboard YAML and JSON file.
+  - `ISP-Watchtower/monitoring/podman/` contains the Kubernetes YAML definition files for deploying the volumes & pods using podman.
+  - `ISP-Watchtower/monitoring/docker/` contains the `docker-compose.yaml` file to deploy the stack using docker.
 
 ```shell
-ISP-Watchtower/monitoring/
+ISP-Watchtower/monitoring
+├── docker
+│   └── docker-compose.yaml
 ├── grafana
 │   └── provisioning
 │       ├── dashboards
@@ -129,10 +132,39 @@ POD ID        NAME        STATUS      CREATED      INFRA ID      # OF CONTAINERS
 
 - If using any firewall filtering on host, allow the connection for TCP port `3000`
 - Connect to Grafana UI on `http://<host-ip>:3000/`
-- Login using username / password set in `grafana-pod.yaml`, password can be changed to a stronger password.
-- Confirm datasource `Home -> Connections -> Data sources -> influxdb` is visible and tested to be working
-- Open the `Home -> Dashboards -> ISP Watchtower` dashboard
+- Login using username / password set in `grafana-pod.yaml`, password can be changed to a stronger password at login.
+- Confirm datasource `Home -> Connections -> Data sources -> influxdb` is visible and tested to be working.
+- Open the `Home -> Dashboards -> ISP Watchtower` dashboard.
 
 ### Using docker
 
-- Refer to below section if deploying the TIG container stack using podman
+- Refer to below section if deploying the TIG container stack using docker
+- Move to the `monitoring` folder
+
+```shell
+cd ISP-Watchtower/monitoring
+```
+
+- Using the `docker-compose.yaml` file present under `ISP-Watchtower/monitoring/docker/` folder deploy the stack
+
+```shell
+docker-compose -p gondor -f docker/docker-compose.yaml up -d
+```
+
+- Confirm the containers are up and running
+
+```shell
+docker-compose -p gondor -f docker/docker-compose.yaml ps -a
+
+  Name                Command               State                                                            Ports
+------------------------------------------------------------------------------------------------------------------------------------------------
+grafana    /run.sh                          Up      0.0.0.0:3000->3000/tcp,:::3000->3000/tcp
+influxdb   /entrypoint.sh -config /et ...   Up      0.0.0.0:8086->8086/tcp,:::8086->8086/tcp
+telegraf   /entrypoint.sh telegraf          Up      0.0.0.0:8092->8092/tcp,:::8092->8092/tcp, 8092/udp, 0.0.0.0:8094->8094/tcp,:::8094->8094/tcp,
+                                                    0.0.0.0:8125->8125/tcp,:::8125->8125/tcp, 8125/udp
+```
+
+- Connect to Grafana UI on `http://<host-ip>:3000/`
+- Login using username / password set for grafana service in `docker-compose.yaml`, password can be changed to a stronger password at login.
+- Confirm datasource `Home -> Connections -> Data sources -> influxdb` is visible and tested to be working
+- Open the `Home -> Dashboards -> ISP Watchtower` dashboard
