@@ -1,0 +1,18 @@
+---
+apiVersion: 1
+
+datasources:
+  - id: 1
+    uid: ae2lsf3rg8jaxc
+    orgId: 1
+    name: influxdb
+    type: influxdb
+    typeName: InfluxDB
+    access: proxy
+    url: http://influxdb:8086
+    basicAuth: false
+    isDefault: true
+    jsonData:
+      dbName: telegraf
+    readOnly: false
+

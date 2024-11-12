@@ -1,0 +1,31 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: telegraf
+spec:
+  containers:
+    - name: telegraf
+      image: docker.io/telegraf:1.32.2
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 8092
+        - containerPort: 8094
+        - containerPort: 8125
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        allowPrivilegeEscalation: false
+        capabilities:
+          add:
+            - CAP_NET_RAW
+      volumeMounts:
+        - name: telegraf-config
+          mountPath: /etc/telegraf/telegraf.conf
+          subPath: telegraf.conf
+  volumes:
+    - name: telegraf-config
+      hostPath:
+        path: ./telegraf/telegraf.conf
+  restartPolicy: Always
+
